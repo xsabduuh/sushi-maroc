@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>💘 Crazy Infinite Love Quiz | Will you marry me? 💘</title>
+    <title>💘 Crazy Love Quiz | Will you marry me? 💘</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -25,6 +25,7 @@
             overflow-x: hidden;
         }
 
+        /* Floating hearts */
         .floating-hearts {
             position: fixed;
             top: 0;
@@ -55,6 +56,7 @@
             }
         }
 
+        /* Main card */
         .container {
             position: relative;
             z-index: 10;
@@ -86,6 +88,7 @@
             line-height: 1.3;
         }
 
+        /* Buttons */
         .cute-btn {
             background: linear-gradient(95deg, #ff6685, #ff3b6f);
             border: none;
@@ -132,6 +135,7 @@
             margin: 15px 0;
         }
 
+        /* Sections */
         .question-section {
             margin: 20px 0;
         }
@@ -140,13 +144,13 @@
             display: none;
         }
 
+        /* Love meter */
         .love-meter {
             background: #ffeef2;
             padding: 20px;
             border-radius: 50px;
             margin: 20px 0;
             text-align: center;
-            position: relative;
         }
 
         .slider {
@@ -174,18 +178,6 @@
             font-size: 1.3rem;
             font-weight: bold;
             color: #c53a60;
-            transition: all 0.1s ease;
-        }
-
-        .love-percentage.infinite-pulse {
-            animation: infiniteScale 0.3s infinite alternate;
-            font-size: 2rem;
-            color: #ff3366;
-        }
-
-        @keyframes infiniteScale {
-            from { transform: scale(1); }
-            to { transform: scale(1.2); }
         }
 
         .extra-love {
@@ -213,6 +205,7 @@
             to { transform: scale(1.05); }
         }
 
+        /* Celebration */
         .celebration {
             margin-top: 20px;
         }
@@ -228,6 +221,7 @@
             margin: 15px 0;
         }
 
+        /* Secret answer */
         .secret-answer {
             margin-top: 20px;
             opacity: 0.65;
@@ -272,8 +266,9 @@
     <div class="floating-hearts"></div>
 
     <div class="container">
-        <h1>💖 Crazy Infinite Love Quiz 💖</h1>
+        <h1>💖 Crazy Love Quiz 💖</h1>
 
+        <!-- Question 1 -->
         <div id="question1" class="question-section">
             <h2>Do you love me? 💕</h2>
             <div class="btn-group">
@@ -285,11 +280,12 @@
             </div>
         </div>
 
+        <!-- Question 2: Love Meter -->
         <div id="question2" class="question-section hidden">
-            <h2>How much do you love me? <br> <span style="font-size:1.2rem;">(drag to infinity!)</span></h2>
+            <h2>How much do you love me? <br> <span style="font-size:1.2rem;">(0 to 10,000)</span></h2>
             <div class="love-meter">
                 <input type="range" id="loveSlider" class="slider" min="0" max="10000" value="100" step="1">
-                <div class="love-percentage" id="lovePercentageDisplay">
+                <div class="love-percentage">
                     <span>❤️ <span id="loveValue">100</span>%</span>
                 </div>
                 <div id="extraLoveMsg" class="extra-love hidden"></div>
@@ -297,6 +293,7 @@
             <button class="cute-btn" id="nextBtn">Next ➡️</button>
         </div>
 
+        <!-- Question 3: Proposal -->
         <div id="question3" class="question-section hidden">
             <h2>Will you marry me? 💍</h2>
             <div class="btn-group">
@@ -305,6 +302,7 @@
             </div>
         </div>
 
+        <!-- Celebration -->
         <div id="celebration" class="celebration hidden">
             <h2>🎉 YAY! 🎉</h2>
             <p class="celebration-text">You made me the happiest person in the world! 💖</p>
@@ -340,9 +338,8 @@
         const loveValueSpan = document.getElementById('loveValue');
         const extraLoveMsg = document.getElementById('extraLoveMsg');
         const resetBtn = document.getElementById('resetBtn');
-        const lovePercentageDisplay = document.getElementById('lovePercentageDisplay');
 
-        // Floating hearts
+        // ========== FLOATING HEARTS ==========
         function createFloatingHearts() {
             const hearts = ['❤️', '💖', '💗', '💘', '💝', '💕', '💓'];
             for (let i = 0; i < 45; i++) {
@@ -359,7 +356,7 @@
         }
         createFloatingHearts();
 
-        // Move button safely
+        // ========== MOVE BUTTON SAFELY ==========
         function moveButtonSafely(btn) {
             const btnRect = btn.getBoundingClientRect();
             const btnWidth = btnRect.width;
@@ -378,7 +375,7 @@
             setTimeout(() => { btn.style.transform = ''; }, 200);
         }
 
-        // Question 1 logic
+        // ========== QUESTION 1 ==========
         noBtn1.addEventListener('click', (e) => {
             e.preventDefault();
             moveButtonSafely(noBtn1);
@@ -393,153 +390,40 @@
             loveSlider.value = 100;
             loveValueSpan.textContent = 100;
             extraLoveMsg.classList.add('hidden');
-            stopInfiniteLove(); // ensure any infinite loop stops
         });
 
         secretBtn.addEventListener('click', () => {
             q1.classList.add('hidden');
             q2.classList.remove('hidden');
-            stopInfiniteLove();
         });
 
-        // ========== INFINITE LOVE MECHANICS ==========
-        let infiniteInterval = null;
-        let currentInfiniteValue = 10000;
-        let isDragging = false;
-        let isAtMax = false;
-
-        function startInfiniteLove() {
-            if (infiniteInterval) return;
-            currentInfiniteValue = 10000;
-            // Set the slider to max but we will override display
-            loveSlider.value = 10000;
-            loveValueSpan.textContent = "∞";
-            lovePercentageDisplay.classList.add('infinite-pulse');
-            extraLoveMsg.innerHTML = "💞 INFINITE LOVE! KEEP GOING! 💞";
-            extraLoveMsg.classList.remove('hidden');
-            extraLoveMsg.classList.add('super-love');
-            
-            infiniteInterval = setInterval(() => {
-                if (!isDragging) {
-                    stopInfiniteLove();
-                    return;
-                }
-                // Increase value exponentially or by random big numbers
-                currentInfiniteValue += Math.floor(Math.random() * 500) + 200;
-                // Format number with commas
-                let displayVal = currentInfiniteValue.toLocaleString();
-                loveValueSpan.textContent = displayVal;
-                // Scale effect
-                lovePercentageDisplay.style.transform = 'scale(1.05)';
-                setTimeout(() => { if(lovePercentageDisplay) lovePercentageDisplay.style.transform = ''; }, 100);
-                // Change message randomly
-                if (currentInfiniteValue > 50000) {
-                    extraLoveMsg.innerHTML = "🚀 INFINITE BEYOND UNIVERSE! YOU'RE A LEGEND! 🚀";
-                } else if (currentInfiniteValue > 20000) {
-                    extraLoveMsg.innerHTML = "💥 COSMIC LOVE EXPLOSION! 💥";
-                } else {
-                    extraLoveMsg.innerHTML = "💞 INFINITE LOVE! KEEP GOING! 💞";
-                }
-            }, 150);
-        }
-
-        function stopInfiniteLove() {
-            if (infiniteInterval) {
-                clearInterval(infiniteInterval);
-                infiniteInterval = null;
-            }
-            lovePercentageDisplay.classList.remove('infinite-pulse');
-            // Reset to normal display but keep slider at max 10000
-            if (loveSlider.value == 10000 && !isDragging) {
-                loveValueSpan.textContent = "10000";
-                extraLoveMsg.classList.add('hidden');
-            } else if (loveSlider.value < 10000) {
-                loveValueSpan.textContent = loveSlider.value;
-                extraLoveMsg.classList.add('hidden');
-            }
-        }
-
-        // Detect dragging on slider
-        loveSlider.addEventListener('mousedown', () => {
-            isDragging = true;
-        });
-        loveSlider.addEventListener('touchstart', () => {
-            isDragging = true;
-        });
-
-        loveSlider.addEventListener('input', (e) => {
+        // ========== LOVE METER ==========
+        loveSlider.addEventListener('input', () => {
             let val = parseInt(loveSlider.value);
-            if (val >= 10000) {
-                // At max, start infinite if not already started
-                if (!infiniteInterval && isDragging) {
-                    startInfiniteLove();
-                }
-                isAtMax = true;
-            } else {
-                // Not at max, stop infinite if running
-                if (infiniteInterval) stopInfiniteLove();
-                loveValueSpan.textContent = val;
+            loveValueSpan.textContent = val;
+            if (val > 100) {
                 extraLoveMsg.classList.remove('hidden');
-                if (val > 1000) {
-                    if (val >= 5000) extraLoveMsg.innerHTML = CONFIG.loveMessages.extreme;
-                    else extraLoveMsg.innerHTML = CONFIG.loveMessages.high;
+                if (val >= 5000) {
+                    extraLoveMsg.innerHTML = CONFIG.loveMessages.extreme;
+                    extraLoveMsg.classList.add('super-love');
+                } else if (val > 1000) {
+                    extraLoveMsg.innerHTML = CONFIG.loveMessages.high;
+                    extraLoveMsg.classList.remove('super-love');
                 } else {
                     extraLoveMsg.innerHTML = CONFIG.loveMessages.normal;
+                    extraLoveMsg.classList.remove('super-love');
                 }
-                isAtMax = false;
-            }
-        });
-
-        // When user stops dragging (mouseup / touchend)
-        function onDragEnd() {
-            isDragging = false;
-            if (infiniteInterval) {
-                stopInfiniteLove();
-                // After infinite stops, set display to a funny huge number but keep slider at 10000
-                loveValueSpan.textContent = "∞ LOVE";
-                extraLoveMsg.innerHTML = "💖 YOU BROKE THE SCALE! INFINITE LOVE DETECTED! 💖";
-                extraLoveMsg.classList.add('super-love');
-                // Optionally keep a huge number
-            }
-        }
-
-        loveSlider.addEventListener('mouseup', onDragEnd);
-        loveSlider.addEventListener('touchend', onDragEnd);
-        // Also if mouse leaves window while dragging
-        window.addEventListener('mouseup', (e) => {
-            if (isDragging) onDragEnd();
-        });
-
-        // Normal love meter messages when not infinite
-        loveSlider.addEventListener('input', function() {
-            if (!isAtMax) {
-                let val = parseInt(loveSlider.value);
-                loveValueSpan.textContent = val;
-                if (val > 100) {
-                    extraLoveMsg.classList.remove('hidden');
-                    if (val >= 5000) {
-                        extraLoveMsg.innerHTML = CONFIG.loveMessages.extreme;
-                        extraLoveMsg.classList.add('super-love');
-                    } else if (val > 1000) {
-                        extraLoveMsg.innerHTML = CONFIG.loveMessages.high;
-                        extraLoveMsg.classList.remove('super-love');
-                    } else {
-                        extraLoveMsg.innerHTML = CONFIG.loveMessages.normal;
-                        extraLoveMsg.classList.remove('super-love');
-                    }
-                } else {
-                    extraLoveMsg.classList.add('hidden');
-                }
+            } else {
+                extraLoveMsg.classList.add('hidden');
             }
         });
 
         nextBtn.addEventListener('click', () => {
-            stopInfiniteLove();
             q2.classList.add('hidden');
             q3.classList.remove('hidden');
         });
 
-        // Question 3
+        // ========== QUESTION 3 ==========
         noBtn3.addEventListener('click', (e) => {
             e.preventDefault();
             moveButtonSafely(noBtn3);
@@ -554,7 +438,7 @@
             const celebrationText = document.querySelector('.celebration-text');
             if (celebrationText) celebrationText.innerText = CONFIG.celebrationMessage;
             
-            // Heart explosion effect
+            // Heart explosion
             for (let i = 0; i < 80; i++) {
                 const heart = document.createElement('div');
                 heart.innerText = ['❤️', '💖', '💗', '💘', '💝'][Math.floor(Math.random() * 5)];
@@ -571,9 +455,8 @@
             }
         });
 
-        // Reset function
+        // ========== RESET ==========
         function resetGame() {
-            stopInfiniteLove();
             celebrationDiv.classList.add('hidden');
             q3.classList.add('hidden');
             q2.classList.add('hidden');
@@ -586,15 +469,11 @@
                 btn.style.transform = '';
             });
             loveSlider.value = 100;
-            loveValueSpan.textContent = "100";
+            loveValueSpan.textContent = 100;
             extraLoveMsg.classList.add('hidden');
-            lovePercentageDisplay.classList.remove('infinite-pulse');
             noBtn1.textContent = "No 😜";
             noBtn3.textContent = "No way 😈";
-            isDragging = false;
-            isAtMax = false;
         }
-
         resetBtn.addEventListener('click', resetGame);
     </script>
 </body>
