@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Crazy Love Quiz 💘</title>
+    <title>💘 Crazy Love Quiz | Will you marry me? 💘</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -11,51 +11,57 @@
     <div class="floating-hearts"></div>
 
     <div class="container">
-        <h1>💖 A Silly Love Quiz 💖</h1>
-        
-        <!-- Music Toggle (optional) -->
+        <h1>💖 Crazy Love Quiz 💖</h1>
+
+        <!-- Music controls (optional) -->
         <div class="music-controls">
             <button id="musicToggle" class="music-btn">🎵 Play Music</button>
-            <audio id="bgMusic" loop>
+            <audio id="bgMusic" loop preload="auto">
                 <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                Your browser does not support audio.
             </audio>
         </div>
 
-        <!-- Question 1 -->
+        <!-- ========== QUESTION 1 ========== -->
         <div id="question1" class="question-section">
-            <h2>Do you love me? ❤️</h2>
-            <button class="cute-btn" id="yesBtn1">Yes! 💕</button>
-            <button class="cute-btn" id="noBtn1">No 😜</button>
+            <h2>Do you love me? 💕</h2>
+            <div class="btn-group">
+                <button class="cute-btn yes-btn" id="yesBtn1">Yes! Absolutely 💖</button>
+                <button class="cute-btn no-btn" id="noBtn1">No 😜</button>
+            </div>
             <div class="secret-answer">
-                <button class="cute-btn special" id="secretBtn">🤫 Secret answer</button>
+                <button class="cute-btn special" id="secretBtn">🤫 Secret answer (skip)</button>
             </div>
         </div>
 
-        <!-- Question 2: Love Meter (crazy) -->
+        <!-- ========== QUESTION 2: Crazy Love Meter ========== -->
         <div id="question2" class="question-section hidden">
-            <h2>How much do you love me? (0 to 10,000) 💘</h2>
+            <h2>How much do you love me? <br> <span style="font-size:1.2rem;">(0 to 10,000)</span></h2>
             <div class="love-meter">
-                <input type="range" id="loveSlider" min="0" max="10000" value="100" class="slider">
-                <p>
-                    <span class="love-value">❤️ <span id="loveValue">100</span>%</span>
-                    <span id="extraLoveMsg" class="extra-love hidden"></span>
-                </p>
+                <input type="range" id="loveSlider" class="slider" min="0" max="10000" value="100" step="1">
+                <div class="love-percentage">
+                    <span>❤️ <span id="loveValue">100</span>%</span>
+                </div>
+                <div id="extraLoveMsg" class="extra-love hidden"></div>
             </div>
             <button class="cute-btn" id="nextBtn">Next ➡️</button>
         </div>
 
-        <!-- Question 3: Will you marry me? -->
+        <!-- ========== QUESTION 3: Proposal ========== -->
         <div id="question3" class="question-section hidden">
             <h2>Will you marry me? 💍</h2>
-            <button class="cute-btn final-yes" id="yesBtn3">YES! 💒</button>
-            <button class="cute-btn" id="noBtn3">No way 😈</button>
+            <div class="btn-group">
+                <button class="cute-btn final-yes" id="yesBtn3">YES! 💒</button>
+                <button class="cute-btn no-btn" id="noBtn3">No way 😈</button>
+            </div>
         </div>
 
-        <!-- Celebration -->
+        <!-- ========== CELEBRATION ========== -->
         <div id="celebration" class="celebration hidden">
             <h2>🎉 YAY! 🎉</h2>
-            <p class="celebration-text">You made me the happiest person! 💖</p>
-            <p class="celebration-emoji">💍❤️🥂💃🕺</p>
+            <p class="celebration-text">You made me the happiest person in the world! 💖</p>
+            <div class="celebration-emoji">💍❤️🥂💃🕺🎊</div>
+            <button class="cute-btn" id="resetBtn">Start Over 🔄</button>
         </div>
     </div>
 
